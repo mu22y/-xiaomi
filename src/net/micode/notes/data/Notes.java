@@ -20,9 +20,14 @@ import android.net.Uri;
 public class Notes {
     public static final String AUTHORITY = "micode_notes";
     public static final String TAG = "Notes";
+    //定义基本信息，认证信息和日志发出者。 @齐祥栋
+
     public static final int TYPE_NOTE     = 0;
     public static final int TYPE_FOLDER   = 1;
     public static final int TYPE_SYSTEM   = 2;
+    //三种note表的类。 @齐祥栋
+
+
 
     /**
      * Following IDs are system folders' identifiers
@@ -30,10 +35,15 @@ public class Notes {
      * {@link Notes#ID_TEMPARAY_FOLDER } is for notes belonging no folder
      * {@link Notes#ID_CALL_RECORD_FOLDER} is to store call records
      */
-    public static final int ID_ROOT_FOLDER = 0;
-    public static final int ID_TEMPARAY_FOLDER = -1;
-    public static final int ID_CALL_RECORD_FOLDER = -2;
-    public static final int ID_TRASH_FOLER = -3;
+    public static final int ID_ROOT_FOLDER = 0;                   //默认文件夹。 @齐祥栋
+    public static final int ID_TEMPARAY_FOLDER = -1;              //笔记（不属于文件夹）  @齐祥栋
+    public static final int ID_CALL_RECORD_FOLDER = -2;           //通话记录，便于返回。  @齐祥栋
+    public static final int ID_TRASH_FOLER = -3;                  //垃圾回收站。  @齐祥栋
+    //四种文件夹。用来存储信息。
+
+
+
+
 
     public static final String INTENT_EXTRA_ALERT_DATE = "net.micode.notes.alert_date";
     public static final String INTENT_EXTRA_BACKGROUND_ID = "net.micode.notes.background_color_id";
@@ -46,10 +56,22 @@ public class Notes {
     public static final int TYPE_WIDGET_2X            = 0;
     public static final int TYPE_WIDGET_4X            = 1;
 
-    public static class DataConstants {
-        public static final String NOTE = TextNote.CONTENT_ITEM_TYPE;
-        public static final String CALL_NOTE = CallNote.CONTENT_ITEM_TYPE;
+
+
+
+
+
+    public static class DataConstants {      //两种数据类型。@齐祥栋
+        public static final String NOTE = TextNote.CONTENT_ITEM_TYPE;   //文本便签（textnote）@齐祥栋
+        public static final String CALL_NOTE = CallNote.CONTENT_ITEM_TYPE;  //通话记录（callnote） @齐祥栋
     }
+
+
+
+
+
+
+
 
     /**
      * Uri to query all notes and folders
@@ -60,75 +82,83 @@ public class Notes {
      * Uri to query data
      */
     public static final Uri CONTENT_DATA_URI = Uri.parse("content://" + AUTHORITY + "/data");
+    //访问笔记、文件和数据的uri。@齐祥栋
 
-    public interface NoteColumns {
+
+
+
+
+
+
+
+    public interface NoteColumns {                     //静态的最忠的字符串常量，表示数据库里的列名。@齐祥栋
         /**
          * The unique ID for a row
          * <P> Type: INTEGER (long) </P>
          */
-        public static final String ID = "_id";
+        public static final String ID = "_id";         //ID  @齐祥栋
 
         /**
          * The parent's id for note or folder
          * <P> Type: INTEGER (long) </P>
          */
-        public static final String PARENT_ID = "parent_id";
+        public static final String PARENT_ID = "parent_id";   //父ID   @齐祥栋
 
         /**
          * Created data for note or folder
          * <P> Type: INTEGER (long) </P>
          */
-        public static final String CREATED_DATE = "created_date";
+        public static final String CREATED_DATE = "created_date";   //创建日期  @齐祥栋
 
         /**
          * Latest modified date
          * <P> Type: INTEGER (long) </P>
          */
-        public static final String MODIFIED_DATE = "modified_date";
+        public static final String MODIFIED_DATE = "modified_date";    //修改日期 @齐祥栋
 
 
         /**
          * Alert date
          * <P> Type: INTEGER (long) </P>
          */
-        public static final String ALERTED_DATE = "alert_date";
+        public static final String ALERTED_DATE = "alert_date";  //提醒日期  @齐祥栋
 
         /**
          * Folder's name or text content of note
          * <P> Type: TEXT </P>
          */
-        public static final String SNIPPET = "snippet";
+        public static final String SNIPPET = "snippet";     //标签名。 @齐祥栋
 
         /**
          * Note's widget id
          * <P> Type: INTEGER (long) </P>
          */
-        public static final String WIDGET_ID = "widget_id";
+        public static final String WIDGET_ID = "widget_id";     //小部件ID  @齐祥栋
 
         /**
          * Note's widget type
          * <P> Type: INTEGER (long) </P>
          */
-        public static final String WIDGET_TYPE = "widget_type";
+        public static final String WIDGET_TYPE = "widget_type"; //小部件类型。 @齐祥栋
 
         /**
          * Note's background color's id
          * <P> Type: INTEGER (long) </P>
          */
-        public static final String BG_COLOR_ID = "bg_color_id";
+        public static final String BG_COLOR_ID = "bg_color_id";  //背景颜色的ID  @齐祥栋
 
         /**
          * For text note, it doesn't has attachment, for multi-media
          * note, it has at least one attachment
          * <P> Type: INTEGER </P>
          */
-        public static final String HAS_ATTACHMENT = "has_attachment";
+        public static final String HAS_ATTACHMENT = "has_attachment";  //附件  @齐祥栋
 
         /**
          * Folder's count of notes
          * <P> Type: INTEGER (long) </P>
          */
-        public static final String NOTES_COUNT = "notes_count";
+        public static final String NOTES_COUNT = "notes_count"; //标签数量 @齐祥栋
 
         /**
          * The file type: folder or note
