@@ -164,40 +164,46 @@ public class Notes {
          * The file type: folder or note
          * <P> Type: INTEGER </P>
          */
-        public static final String TYPE = "type";
+        public static final String TYPE = "type"; //标签类型  @齐祥栋
 
         /**
          * The last sync id
          * <P> Type: INTEGER (long) </P>
          */
-        public static final String SYNC_ID = "sync_id";
+        public static final String SYNC_ID = "sync_id";     //最后一个同步的id @齐祥栋
 
         /**
          * Sign to indicate local modified or not
          * <P> Type: INTEGER </P>
          */
-        public static final String LOCAL_MODIFIED = "local_modified";
+        public static final String LOCAL_MODIFIED = "local_modified";  //本地修改标签。 @齐祥栋
 
         /**
          * Original parent id before moving into temporary folder
          * <P> Type : INTEGER </P>
          */
-        public static final String ORIGIN_PARENT_ID = "origin_parent_id";
+        public static final String ORIGIN_PARENT_ID = "origin_parent_id";   //移动前iD @齐祥栋
 
         /**
          * The gtask id
          * <P> Type : TEXT </P>
          */
-        public static final String GTASK_ID = "gtask_id";
+        public static final String GTASK_ID = "gtask_id";   //谷歌任务id  @齐祥栋
 
         /**
          * The version code
          * <P> Type : INTEGER (long) </P>
          */
-        public static final String VERSION = "version";
+        public static final String VERSION = "version";  //代码版本 @齐祥栋
     }
 
-    public interface DataColumns {
+
+
+
+
+
+
+    public interface DataColumns {            //同上notecolumns 是静态常量， 数据库中的列名。  @齐祥栋
         /**
          * The unique ID for a row
          * <P> Type: INTEGER (long) </P>
@@ -209,7 +215,8 @@ public class Notes {
          * <P> Type: Text </P>
          */
         public static final String MIME_TYPE = "mime_type";
-
+                                          //***mime类型用于标识文档文件或者字节流的性质和格式
+                                            //可以标识不同的数据类型。例如文本图片和音频视频。@齐祥栋
         /**
          * The reference id to note that this data belongs to
          * <P> Type: INTEGER (long) </P>
@@ -271,22 +278,42 @@ public class Notes {
         public static final String DATA5 = "data5";
     }
 
+
+
+
+
+
+
+
+
+
+
+//以下是datacolumns的实现类，是文本标签和通话记录的实体部分。@齐祥栋
+
     public static final class TextNote implements DataColumns {
         /**
          * Mode to indicate the text in check list mode or not
          * <P> Type: Integer 1:check list mode 0: normal mode </P>
          */
-        public static final String MODE = DATA1;
 
-        public static final int MODE_CHECK_LIST = 1;
+        //定义textnote
+        public static final String MODE = DATA1;      //模式被存储在data1的列里面 @齐祥栋
 
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/text_note";
+        public static final int MODE_CHECK_LIST = 1;  //列表的检索模式为1 @齐祥栋
 
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/text_note";
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/text_note";  //mime类型，标识文本标签目录
+
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/text_note";//mime类型，标识文本标签的单个项。
 
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/text_note");
-    }
+    }       //文本标签内容提供者的URI，访问文本标签数据。
 
+
+
+
+
+
+    //**同上**
     public static final class CallNote implements DataColumns {
         /**
          * Call date for this record
