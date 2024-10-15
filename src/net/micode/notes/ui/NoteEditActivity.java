@@ -72,6 +72,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (isInNightMode()) {
+        setTheme(R.style.AppTheme_Night);
+    } else {
+        setTheme(R.style.AppTheme);
+    }
+    setContentView(R.layout.activity_main);
+}
+
+private boolean isInNightMode() {
+    int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+}
 public class NoteEditActivity extends Activity implements OnClickListener,
         NoteSettingChangedListener, OnTextViewChangeListener {
     private class HeadViewHolder {

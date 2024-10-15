@@ -78,6 +78,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
+
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (isInNightMode()) {
+        setTheme(R.style.AppTheme_Night);
+    } else {
+        setTheme(R.style.AppTheme);
+    }
+    setContentView(R.layout.activity_main);
+}
+
+private boolean isInNightMode() {
+    int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+}
 public class NotesListActivity extends Activity implements OnClickListener, OnItemLongClickListener {
     private static final int FOLDER_NOTE_LIST_QUERY_TOKEN = 0;
 
@@ -952,3 +967,18 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
         return false;
     }
 }
+
+Switch switchNightMode = findViewById(R.id.switch_night_mode);
+switchNightMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            // Enable night mode
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            // Disable night mode
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+        recreate(); // Recreate activity to apply the theme
+    }
+});
