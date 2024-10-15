@@ -1,0 +1,226 @@
+package net.micode.notes.gtask.data;
+ 
+public class MetaData extends Task {
+	/*
+	 * 功能描述：得到类的简写名称存入字符串TAG中
+	 * 实现过程：调用getSimpleName ()函数
+	 */
+    private final static String TAG = MetaData.class.getSimpleName();
+    private String mRelatedGid = null;
+    /*
+     * 功能描述：设置数据，即生成元数据库
+     * 实现过程：调用JSONObject库函数put ()，Task类中的setNotes ()和setName ()函数
+     * 参数注解：
+     */
+    public void setMeta(String gid, JSONObject metaInfo) 
+    {
+    	//对函数块进行注释
+        try {
+            metaInfo.put(GTaskStringUtils.META_HEAD_GTASK_ID, gid);
+            /*
+             * 将这对键值放入metaInfo这个jsonobject对象中
+             */
+        } catch (JSONException e) {
+            Log.e(TAG, "failed to put related gid");
+            /*
+             * 输出错误信息
+             */
+        }
+        setNotes(metaInfo.toString());
+        setName(GTaskStringUtils.META_NOTE_NAME);
+    }
+    /*
+     * 功能描述：获取相关联的Gid
+     */
+    public String getRelatedGid() {
+        return mRelatedGid;
+    }
+    /*
+     * 功能描述：判断当前数据是否为空，若为空则返回真即值得保存
+     * Made By CuiCan
+     */
+    @Override
+    public boolean isWorthSaving() {
+        return getNotes() != null;
+    }
+    /*
+     * 功能描述：使用远程json数据对象设置元数据内容
+     * 实现过程：调用父类Task中的setContentByRemoteJSON ()函数，并
+     * 参数注解： 
+     */
+    @Override
+    public void setContentByRemoteJSON(JSONObject js) {
+        super.setContentByRemoteJSON(js);
+        if (getNotes() != null) {
+            try {
+                JSONObject metaInfo = new JSONObject(getNotes().trim());
+                mRelatedGid = metaInfo.getString(GTaskStringUtils.META_HEAD_GTASK_ID);
+            } catch (JSONException e) {
+                Log.w(TAG, "failed to get related gid");
+                /*
+                 * 输出警告信息
+                 */
+                mRelatedGid = null;
+            }
+        }
+    }
+    /*
+     * 功能描述：使用本地json数据对象设置元数据内容，一般不会用到，若用到，则抛出异常
+     * Made By CuiCan
+     */
+    @Override
+    public void setContentByLocalJSON(JSONObject js) {
+        // this function should not be called
+        throw new IllegalAccessError("MetaData:setContentByLocalJSON should not be called");
+        /*
+         * 传递非法参数异常
+         */
+    }
+    /*
+     * 功能描述：从元数据内容中获取本地json对象，一般不会用到，若用到，则抛出异常
+     * Made By CuiCan
+     */
+    @Override
+    public JSONObject getLocalJSONFromContent() {
+        throw new IllegalAccessError("MetaData:getLocalJSONFromContent should not be called");
+        /*
+         * 传递非法参数异常
+         * Made By Cui Can
+         */
+    }
+    /*
+     * 功能描述：获取同步动作状态，一般不会用到，若用到，则抛出异常
+     * Made By CuiCan
+     */
+    @Override
+    public int getSyncAction(Cursor c) {
+        throw new IllegalAccessError("MetaData:getSyncAction should not be called");
+        /*
+         * 传递非法参数异常
+         * Made By Cui Can
+         */
+    }
+ 
+}
+1、Node.java
+package net.micode.notes.gtask.data;
+ 
+import android.database.Cursor;
+ 
+import org.json.JSONObject;
+ 
+/**
+ * 应该是同步操作的基础数据类型，定义了相关指示同步操作的常量
+ * 关键字：abstract
+ */
+public abstract class Node {
+	//定义了各种用于表征同步状态的常量
+    public static final int SYNC_ACTION_NONE = 0;// 本地和云端都无可更新内容（即本地和云端内容一致）
+    
+    public static final int SYNC_ACTION_ADD_REMOTE = 1;// 需要在远程云端增加内容
+ 
+    public static final int SYNC_ACTION_ADD_LOCAL = 2;// 需要在本地增加内容
+ 
+    public static final int SYNC_ACTION_DEL_REMOTE = 3;// 需要在远程云端删除内容
+ 
+    public static final int SYNC_ACTION_DEL_LOCAL = 4;// 需要在本地删除内容
+ 
+    public static final int SYNC_ACTION_UPDATE_REMOTE = 5;// 需要将本地内容更新到远程云端
+ 
+    public static final int SYNC_ACTION_UPDATE_LOCAL = 6;// 需要将远程云端内容更新到本地
+ 
+    public static final int SYNC_ACTION_UPDATE_CONFLICT = 7;// 同步出现冲突
+ 
+    public static final int SYNC_ACTION_ERROR = 8;// 同步出现错误
+ 
+    private String mGid;
+ 
+    private String mName;
+ 
+    private long mLastModified;//记录最后一次修改时间
+ 
+    private boolean mDeleted;//表征是否被删除
+ 
+    public Node() {
+        mGid = null;
+        mName = "";
+        mLastModified = 0;
+        mDeleted = false;
+    }
+ 
+    public abstract JSONObject getCreateAction(int actionId);
+ 
+    public abstract JSONObject getUpdateAction(int actionId);
+ 
+    public abstract void setContentByRemoteJSON(JSONObject js);
+ 
+    public abstract void setContentByLocalJSON(JSONObject js);
+ 
+    public abstract JSONObject getLocalJSONFromContent();
+ 
+    public abstract int getSyncAction(Cursor c);
+ 
+    public void setGid(String gid) {
+        this.mGid = gid;
+    }
+ 
+    public void setName(String name) {
+        this.mName = name;
+    }
+ 
+    public void setLastModified(long lastModified) {
+        this.mLastModified = lastModified;
+    }
+ 
+    public void setDeleted(boolean deleted) {
+        this.mDeleted = deleted;
+    }
+ 
+    public String getGid() {
+        return this.mGid;
+    }
+ 
+    public String getName() {
+        return this.mName;
+    }
+ 
+    public long getLastModified() {
+        return this.mLastModified;
+    }
+ 
+    public boolean getDeleted() {
+        return this.mDeleted;
+    }
+ 
+}
+2、SqlData.java
+/*
+ * Description：用于支持小米便签最底层的数据库相关操作，和sqlnote的关系上是子集关系，即data是note的子集（节点）。
+ * SqlData其实就是也就是所谓数据中的数据
+ */
+ 
+package net.micode.notes.gtask.data;
+/*
+ * 功能描述：
+ * 实现过程：
+ * 参数注解： 
+ * Made By CuiCan
+ */
+ 
+public class SqlData {
+	/*
+	 * 功能描述：得到类的简写名称存入字符串TAG中
+	 * 实现过程：调用getSimpleName ()函数
+	 * Made By CuiCan
+	 */
+    private static final String TAG = SqlData.class.getSimpleName();
+ 
+private static final int INVALID_ID = -99999;
+=为mDataId置初始值-99999
+ 
+ 
+    /**
+     * 来自Notes类中定义的DataColumn中的一些常量
+     */
+ 
+    // 集合了interface DataColumns中所有SF常量
